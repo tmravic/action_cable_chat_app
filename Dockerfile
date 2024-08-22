@@ -15,9 +15,9 @@ RUN bash -c "set -o pipefail && apt-get update \
 
 COPY --chown=ruby:ruby Gemfile* ./
 RUN bundle install
-COPY . .
+COPY --chown=ruby:ruby . .
 RUN chown ruby:ruby -R ./*
-RUN rm -f tmp/pids/server.pid
+RUN PATH="/app/docker-entrypoint.sh:${PATH}"
+RUN chown +x docker-entrypoint.sh
 USER ruby
-
-CMD ["rails", "server", "-b", "0.0.0.0"]
+ENTRYPOINT ["docker-entrypoint.sh"]
